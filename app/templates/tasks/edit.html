@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{% if task %}Edit Task{% else %}New Task{% endif %} - Seven Habits List{% endblock %}
+
+{% block content %}
+<h1>{% if task %}Edit Task{% else %}New Task{% endif %}</h1>
+
+{% if roles|length == 0 %}
+<div class="error-message">
+    You need to create at least one role before adding tasks.
+    <a href="/roles/new">Create a role</a>
+</div>
+{% else %}
+
+<form method="POST" action="{% if task %}/tasks/{{ task.id }}/edit{% else %}/tasks/new{% endif %}" class="edit-form">
+    <div class="form-group">
+        <label for="name">Task Name</label>
+        <input type="text" id="name" name="name" value="{{ task.name if task else '' }}" required autofocus>
+    </div>
+
+    <div class="form-group">
+        <label for="role_id">Role</label>
+        <select id="role_id" name="role_id" required>
+            {% for role in roles %}
+            <option value="{{ role.id }}" {% if task and task.role_id == role.id %}selected{% endif %}>
+                {{ role.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="effort_level">Effort Level</label>
+        <select id="effort_level" name="effort_level" required>
+            <option value="Low" {% if task and task.effort_level == 'Low' %}selected{% endif %}>Low</option>
+            <option value="Medium" {% if task and task.effort_level == 'Medium' %}selected{% endif %}>Medium</option>
+            <option value="High" {% if task and task.effort_level == 'High' %}selected{% endif %}>High</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="scheduled_date">Scheduled Date (optional)</label>
+        <input type="date" id="scheduled_date" name="scheduled_date"
+               value="{{ task.scheduled_date if task and task.scheduled_date else '' }}"
+               min="{{ min_date }}" max="{{ max_date }}">
+        <small>Must be within the next 4 weeks</small>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% if task %}Update{% else %}Create{% endif %}</button>
+        <a href="/tasks" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+{% endif %}
+{% endblock %}

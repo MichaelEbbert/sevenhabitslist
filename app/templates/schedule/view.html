@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule - Seven Habits List{% endblock %}
+
+{% block content %}
+<div class="schedule-header">
+    <h1>Schedule</h1>
+    <a href="/schedule/print" class="btn btn-secondary" target="_blank">Print View</a>
+</div>
+
+<div class="schedule">
+    {% for day in schedule_days %}
+    <div class="schedule-day">
+        <h3 class="day-heading">{{ day.formatted_date }}</h3>
+        <div class="day-separator">-----------------</div>
+        {% if day.tasks %}
+        <ul class="task-list">
+            {% for task in day.tasks %}
+            <li>
+                <a href="/tasks/{{ task.id }}/edit">{{ task.name }}</a>
+                <span class="task-meta">({{ task.role_name }} - {{ task.effort_level }})</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-tasks">No tasks scheduled</p>
+        {% endif %}
+    </div>
+    {% else %}
+    <p class="empty-message">No scheduled tasks in the next 4 weeks.</p>
+    {% endfor %}
+</div>
+{% endblock %}

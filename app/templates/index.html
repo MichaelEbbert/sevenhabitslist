@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Seven Habits List{% endblock %}
+
+{% block content %}
+<h1>Seven Habits List</h1>
+<p>A task management app based on "The 7 Habits of Highly Effective People" by Stephen Covey.</p>
+
+<div class="home-links">
+    <a href="/roles" class="home-card">
+        <h2>Roles</h2>
+        <p>Manage your life roles (Father, Husband, Programmer, etc.)</p>
+    </a>
+
+    <a href="/tasks" class="home-card">
+        <h2>Tasks</h2>
+        <p>Create and manage tasks linked to your roles</p>
+    </a>
+
+    <a href="/schedule" class="home-card">
+        <h2>Schedule</h2>
+        <p>View upcoming tasks by day</p>
+    </a>
+</div>
+{% endblock %}

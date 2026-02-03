@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule - Print</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            line-height: 1.3;
+            margin: 0.5in;
+            color: #000;
+        }
+
+        .schedule-day {
+            margin-bottom: 1em;
+        }
+
+        .day-heading {
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+        }
+
+        .day-separator {
+            margin: 0;
+            padding: 0;
+        }
+
+        .task-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .task-list li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .no-tasks {
+            margin: 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        @media print {
+            body {
+                margin: 0.25in;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% for day in schedule_days %}
+    <div class="schedule-day">
+        <div class="day-heading">{{ day.formatted_date }}</div>
+        <div class="day-separator">-----------------</div>
+        {% if day.tasks %}
+        <ul class="task-list">
+            {% for task in day.tasks %}
+            <li>{{ task.name }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-tasks">No tasks scheduled</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+</html>
