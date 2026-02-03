@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\"C:\\\\Program Files\\\\Amazon\\\\AWSCLIV2\\\\aws.exe\" ec2 describe-security-groups --filters \"Name=group-name,Values=taskschedule-sg\" --query \"SecurityGroups[0].IpPermissions[*].{Port:FromPort,Protocol:IpProtocol,Source:IpRanges[0].CidrIp}\")",
+      "Bash(ssh:*)",
+      "Bash(\"C:\\\\Program Files\\\\Amazon\\\\AWSCLIV2\\\\aws.exe\" ec2 authorize-security-group-ingress:*)",
+      "Bash(nslookup:*)",
+      "Bash(python:*)",
+      "Bash(venv/Scripts/pip install:*)",
+      "Bash(venv/Scripts/python:*)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial commit: Seven Habits List application\n\nFastAPI web app for task management based on \"7 Habits of Highly Effective People\".\n\nFeatures:\n- Roles: Create/edit/delete life roles \\(deletion blocked if tasks linked\\)\n- Tasks: Create/edit/complete/delete tasks linked to roles\n- Schedule: View upcoming tasks by day with 60-line print limit\n- Effort levels: Low/Medium/High per task\n- Date scheduling within 4 weeks\n\nTech stack: FastAPI, Jinja2, SQLite, Uvicorn\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(scp:*)",
+      "Bash(git rm:*)",
+      "Bash(git pull:*)",
+      "Bash(rsync:*)",
+      "Bash(npm run build:*)",
+      "Bash(where:*)",
+      "Bash(taskkill:*)",
+      "Bash(pkill:*)"
+    ]
+  }
+}
