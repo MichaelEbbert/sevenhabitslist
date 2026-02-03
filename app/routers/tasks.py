@@ -17,20 +17,27 @@ def get_date_range():
     return today, max_date
 
 @router.get("/", response_class=HTMLResponse)
-async def list_tasks(request: Request, db: aiosqlite.Connection = Depends(get_db)):
-    """List all active tasks."""
+async def list_tasks(
+    request: Request,
+    show: str = "active",
+    db: aiosqlite.Connection = Depends(get_db)
+):
+    """List tasks filtered by status."""
+    is_complete = 1 if show == "completed" else 0
+
     cursor = await db.execute("""
         SELECT t.id, t.name, t.effort_level, t.scheduled_date, t.is_complete,
                r.name as role_name, r.id as role_id
         FROM tasks t
         JOIN roles r ON t.role_id = r.id
-        WHERE t.is_complete = 0
+        WHERE t.is_complete = ?
         ORDER BY t.name
-    """)
+    """, (is_complete,))
     tasks = await cursor.fetchall()
     return templates.TemplateResponse("tasks/list.html", {
         "request": request,
-        "tasks": tasks
+        "tasks": tasks,
+        "show": show
     })
 
 @router.get("/new", response_class=HTMLResponse)
@@ -127,6 +134,16 @@ async def complete_task(
     await db.execute("UPDATE tasks SET is_complete = 1 WHERE id = ?", (task_id,))
     await db.commit()
     return RedirectResponse(url="/tasks", status_code=303)
+
+@router.post("/{task_id}/reactivate")
+async def reactivate_task(
+    task_id: int,
+    db: aiosqlite.Connection = Depends(get_db)
+):
+    """Reactivate a completed task."""
+    await db.execute("UPDATE tasks SET is_complete = 0 WHERE id = ?", (task_id,))
+    await db.commit()
+    return RedirectResponse(url="/tasks?show=completed", status_code=303)
 
 @router.post("/{task_id}/delete")
 async def delete_task(

@@ -7,13 +7,29 @@
         body {
             font-family: Arial, sans-serif;
             font-size: 10pt;
-            line-height: 1.3;
-            margin: 0.5in;
+            line-height: 1.2;
+            margin: 0.25in;
             color: #000;
         }
 
+        .columns-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .columns-table td {
+            width: 50%;
+            vertical-align: top;
+            padding-right: 0.25in;
+        }
+
+        .columns-table td:last-child {
+            padding-right: 0;
+            padding-left: 0.25in;
+        }
+
         .schedule-day {
-            margin-bottom: 1em;
+            margin-bottom: 0.5em;
         }
 
         .day-heading {
@@ -45,28 +61,58 @@
             color: #666;
         }
 
+        .overdue-label {
+            color: red;
+            font-weight: bold;
+        }
+
         @media print {
             body {
-                margin: 0.25in;
+                margin: 0.2in;
             }
         }
     </style>
 </head>
 <body>
-    {% for day in schedule_days %}
-    <div class="schedule-day">
-        <div class="day-heading">{{ day.formatted_date }}</div>
-        <div class="day-separator">-----------------</div>
-        {% if day.tasks %}
-        <ul class="task-list">
-            {% for task in day.tasks %}
-            <li>{{ task.name }}</li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p class="no-tasks">No tasks scheduled</p>
-        {% endif %}
-    </div>
-    {% endfor %}
+    <table class="columns-table">
+        <tr>
+            <td>
+                {% for day in left_column %}
+                <div class="schedule-day">
+                    <div class="day-heading">
+                        {{ day.formatted_date }}
+                        {% if day.is_overdue %}<span class="overdue-label">Overdue</span>{% endif %}
+                    </div>
+                    <div class="day-separator">-----------------</div>
+                    {% if day.tasks %}
+                    <ul class="task-list">
+                        {% for task in day.tasks %}
+                        <li>{{ task.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </td>
+            <td>
+                {% for day in right_column %}
+                <div class="schedule-day">
+                    <div class="day-heading">
+                        {{ day.formatted_date }}
+                        {% if day.is_overdue %}<span class="overdue-label">Overdue</span>{% endif %}
+                    </div>
+                    <div class="day-separator">-----------------</div>
+                    {% if day.tasks %}
+                    <ul class="task-list">
+                        {% for task in day.tasks %}
+                        <li>{{ task.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

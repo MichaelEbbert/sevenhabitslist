@@ -10,8 +10,11 @@
 
 <div class="schedule">
     {% for day in schedule_days %}
-    <div class="schedule-day">
-        <h3 class="day-heading">{{ day.formatted_date }}</h3>
+    <div class="schedule-day {% if day.is_overdue %}overdue{% endif %}">
+        <h3 class="day-heading">
+            {{ day.formatted_date }}
+            {% if day.is_overdue %}<span class="overdue-label">Overdue</span>{% endif %}
+        </h3>
         <div class="day-separator">-----------------</div>
         {% if day.tasks %}
         <ul class="task-list">
