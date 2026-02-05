@@ -31,7 +31,10 @@ async def list_tasks(
         FROM tasks t
         JOIN roles r ON t.role_id = r.id
         WHERE t.is_complete = ?
-        ORDER BY t.name
+        ORDER BY
+            CASE WHEN t.scheduled_date IS NULL THEN 1 ELSE 0 END,
+            t.scheduled_date ASC,
+            t.name ASC
     """, (is_complete,))
     tasks = await cursor.fetchall()
     return templates.TemplateResponse("tasks/list.html", {
