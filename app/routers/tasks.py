@@ -37,10 +37,12 @@ async def list_tasks(
             t.name ASC
     """, (is_complete,))
     tasks = await cursor.fetchall()
+    today = date.today().isoformat()
     return templates.TemplateResponse("tasks/list.html", {
         "request": request,
         "tasks": tasks,
-        "show": show
+        "show": show,
+        "today": today
     })
 
 @router.get("/new", response_class=HTMLResponse)

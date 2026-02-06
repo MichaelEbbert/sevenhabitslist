@@ -179,6 +179,15 @@ h1 {
     display: inline;
 }
 
+.scheduled-date {
+    white-space: nowrap;
+}
+
+.scheduled-date.overdue {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
 .empty-message {
     text-align: center;
     color: #7f8c8d;
