@@ -131,12 +131,13 @@ async def update_task(
 @router.post("/{task_id}/complete")
 async def complete_task(
     task_id: int,
+    next: Optional[str] = Form(None),
     db: aiosqlite.Connection = Depends(get_db)
 ):
     """Mark a task as complete."""
     await db.execute("UPDATE tasks SET is_complete = 1 WHERE id = ?", (task_id,))
     await db.commit()
-    return RedirectResponse(url="/tasks", status_code=303)
+    return RedirectResponse(url=next or "/tasks", status_code=303)
 
 @router.post("/{task_id}/reactivate")
 async def reactivate_task(
@@ -151,9 +152,10 @@ async def reactivate_task(
 @router.post("/{task_id}/delete")
 async def delete_task(
     task_id: int,
+    next: Optional[str] = Form(None),
     db: aiosqlite.Connection = Depends(get_db)
 ):
     """Delete a task permanently."""
     await db.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
     await db.commit()
-    return RedirectResponse(url="/tasks", status_code=303)
+    return RedirectResponse(url=next or "/tasks", status_code=303)

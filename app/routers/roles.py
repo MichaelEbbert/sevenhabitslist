@@ -48,9 +48,15 @@ async def edit_role(
     role = await cursor.fetchone()
     if not role:
         return RedirectResponse(url="/roles", status_code=303)
+    cursor = await db.execute(
+        "SELECT id, name, effort_level, scheduled_date, is_complete FROM tasks WHERE role_id = ? ORDER BY name",
+        (role_id,)
+    )
+    tasks = await cursor.fetchall()
     return templates.TemplateResponse("roles/edit.html", {
         "request": request,
-        "role": role
+        "role": role,
+        "tasks": tasks
     })
 
 @router.post("/{role_id}/edit")
