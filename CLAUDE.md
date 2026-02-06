@@ -54,24 +54,16 @@ Access at http://localhost:3002
 
 ---
 
-## Deployment Scripts
+## Deployment
 
-**📦 Automated deployment scripts are available!**
+Use the centralized deployment scripts in `C:\claude_projects\deployment-manager\`:
 
-For AWS deployment, use the Python scripts in this directory:
-- `deploy.py` - Full deployment with file sync and restart
-- `restart.py` - Quick service restart
-- `status.py` - Health check and status verification
-- `logs.py` - View service logs with various options
-
-See **[DEPLOYMENT_SCRIPTS.md](DEPLOYMENT_SCRIPTS.md)** for complete documentation.
-
-**Quick commands:**
 ```bash
-python deploy.py        # Deploy/update application
-python status.py        # Check if everything is running
-python logs.py -f       # Follow logs in real-time
-python restart.py       # Restart the service
+cd C:\claude_projects\deployment-manager
+python deploy.py sevenhabitslist       # Full deploy (sync + deps + restart)
+python status.py sevenhabitslist       # Health check
+python restart.py sevenhabitslist      # Quick restart
+python logs.py sevenhabitslist -f      # Follow logs
 ```
 
 ---
@@ -167,24 +159,21 @@ python restart.py       # Restart the service
 
 **SSH into server:**
 ```bash
-ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
+ssh -i "C:\claude_projects\deployment-manager\taskschedule-key.pem" ec2-user@100.50.222.238
 ```
 
 **Deploy/Update (from local machine):**
 ```bash
-# Run the deployment script
-python deploy.py
+cd C:\claude_projects\deployment-manager
+python deploy.py sevenhabitslist
 ```
 
-**Restart app (on server):**
+**Status/Restart/Logs (from local machine):**
 ```bash
-sudo systemctl restart sevenhabitslist
-sudo systemctl status sevenhabitslist
-```
-
-**View logs (on server):**
-```bash
-sudo journalctl -u sevenhabitslist -f
+cd C:\claude_projects\deployment-manager
+python status.py sevenhabitslist
+python restart.py sevenhabitslist
+python logs.py sevenhabitslist -f
 ```
 
 ---
@@ -287,60 +276,13 @@ sudo systemctl restart nginx
 
 ### Updating the App
 
-**Option 1: Use deployment script (recommended)**
+Use the centralized deployment manager:
 ```bash
-python deploy.py
+cd C:\claude_projects\deployment-manager
+python deploy.py sevenhabitslist
 ```
 
-**Option 2: Manual update**
-```bash
-# 1. Copy files to server
-rsync -avz -e "ssh -i C:\claude_projects\taskschedule\taskschedule-key.pem" \
-  --exclude='venv/' --exclude='data/' --exclude='__pycache__/' --exclude='.git/' \
-  ./ ec2-user@100.50.222.238:/home/ec2-user/sevenhabitslist/
-
-# 2. SSH into server
-ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
-
-# 3. Update dependencies if needed
-cd /home/ec2-user/sevenhabitslist
-source venv/bin/activate
-pip install -r requirements.txt
-
-# 4. Restart service
-sudo systemctl restart sevenhabitslist
-sudo systemctl status sevenhabitslist
-```
-
-### Restarting the App
-
-**Restart service:**
-```bash
-sudo systemctl restart sevenhabitslist
-```
-
-**Check status:**
-```bash
-sudo systemctl status sevenhabitslist
-```
-
-**View logs:**
-```bash
-# Follow logs in real-time
-sudo journalctl -u sevenhabitslist -f
-
-# View last 100 lines
-sudo journalctl -u sevenhabitslist -n 100
-
-# View logs since today
-sudo journalctl -u sevenhabitslist --since today
-```
-
-**Stop/Start service:**
-```bash
-sudo systemctl stop sevenhabitslist
-sudo systemctl start sevenhabitslist
-```
+This syncs files, installs dependencies, restarts the service, and verifies it's running.
 
 ### Troubleshooting
 
