@@ -32,6 +32,10 @@
             margin-bottom: 2.4em;
         }
 
+        .schedule-day:last-child {
+            margin-bottom: 0;
+        }
+
         .day-heading {
             font-size: 10pt;
             font-weight: bold;
@@ -61,9 +65,14 @@
             font-weight: bold;
         }
 
+        @page {
+            margin: 0.25in;
+        }
+
         @media print {
             body {
-                margin: 0.2in;
+                margin: 0;
+                padding: 0;
             }
         }
     </style>

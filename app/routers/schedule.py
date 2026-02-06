@@ -10,7 +10,7 @@ from app.database import get_db
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
-MAX_LINES = 60
+MAX_LINES = 55
 LINES_PER_DAY_HEADER = 3  # Heading (1) + 2 blank lines for spacing (2)
 
 async def get_scheduled_tasks(db: aiosqlite.Connection, include_overdue: bool = True, max_future_days: int = 28):

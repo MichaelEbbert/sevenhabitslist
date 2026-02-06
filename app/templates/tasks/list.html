@@ -32,7 +32,7 @@
             </td>
             <td>{{ task.role_name }}</td>
             <td><span class="effort effort-{{ task.effort_level|lower }}">{{ task.effort_level }}</span></td>
-            <td class="scheduled-date{% if task.scheduled_date and task.scheduled_date < today %} overdue{% endif %}">{{ task.scheduled_date if task.scheduled_date else '—' }}</td>
+            <td class="scheduled-date{% if task.scheduled_date and task.scheduled_date < today and show == 'active' %} overdue{% endif %}">{{ task.scheduled_date if task.scheduled_date else '—' }}</td>
             <td class="actions">
                 <a href="/tasks/{{ task.id }}/edit" class="btn btn-small">Edit</a>
                 {% if show == 'active' %}
