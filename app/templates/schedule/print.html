@@ -29,17 +29,12 @@
         }
 
         .schedule-day {
-            margin-bottom: 0.5em;
+            margin-bottom: 2.4em;
         }
 
         .day-heading {
             font-size: 10pt;
             font-weight: bold;
-            margin: 0;
-            padding: 0;
-        }
-
-        .day-separator {
             margin: 0;
             padding: 0;
         }
@@ -83,7 +78,6 @@
                         {{ day.formatted_date }}
                         {% if day.is_overdue %}<span class="overdue-label">Overdue</span>{% endif %}
                     </div>
-                    <div class="day-separator">-----------------</div>
                     {% if day.tasks %}
                     <ul class="task-list">
                         {% for task in day.tasks %}
@@ -101,7 +95,6 @@
                         {{ day.formatted_date }}
                         {% if day.is_overdue %}<span class="overdue-label">Overdue</span>{% endif %}
                     </div>
-                    <div class="day-separator">-----------------</div>
                     {% if day.tasks %}
                     <ul class="task-list">
                         {% for task in day.tasks %}

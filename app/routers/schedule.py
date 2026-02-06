@@ -11,12 +11,12 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 MAX_LINES = 60
-LINES_PER_DAY_HEADER = 3  # Heading + separator + blank line after tasks
+LINES_PER_DAY_HEADER = 3  # Heading (1) + 2 blank lines for spacing (2)
 
-async def get_scheduled_tasks(db: aiosqlite.Connection, include_overdue: bool = True):
+async def get_scheduled_tasks(db: aiosqlite.Connection, include_overdue: bool = True, max_future_days: int = 28):
     """Get all active scheduled tasks grouped by date."""
     today = date.today()
-    max_date = today + timedelta(weeks=4)
+    max_date = today + timedelta(days=max_future_days)
 
     if include_overdue:
         # Get all incomplete tasks up to max_date (includes overdue)
@@ -53,13 +53,13 @@ async def get_scheduled_tasks(db: aiosqlite.Connection, include_overdue: bool = 
     return tasks_by_date
 
 def get_day_lines(day_tasks: list) -> int:
-    """Calculate lines needed for a day: Header (1) + separator (1) + tasks + blank line (1)."""
+    """Calculate lines needed for a day: Header (1) + tasks + 2 blank lines (2)."""
     return 3 + len(day_tasks)
 
-def collect_all_days(tasks_by_date: dict):
+def collect_all_days(tasks_by_date: dict, max_future_days: int = 28):
     """Collect all days (overdue + future) in chronological order."""
     today = date.today()
-    max_date = today + timedelta(weeks=4)
+    max_date = today + timedelta(days=max_future_days)
 
     all_days = []
 
@@ -99,9 +99,9 @@ def collect_all_days(tasks_by_date: dict):
 
     return all_days
 
-def build_schedule_days(tasks_by_date: dict, max_lines: int = MAX_LINES):
+def build_schedule_days(tasks_by_date: dict, max_lines: int = MAX_LINES, max_future_days: int = 28):
     """Build schedule days respecting the line limit (single column)."""
-    all_days = collect_all_days(tasks_by_date)
+    all_days = collect_all_days(tasks_by_date, max_future_days=max_future_days)
 
     schedule_days = []
     current_line = 0
@@ -114,9 +114,9 @@ def build_schedule_days(tasks_by_date: dict, max_lines: int = MAX_LINES):
 
     return schedule_days
 
-def build_schedule_columns(tasks_by_date: dict, max_lines: int = MAX_LINES):
+def build_schedule_columns(tasks_by_date: dict, max_lines: int = MAX_LINES, max_future_days: int = 28):
     """Build two columns of schedule days, each respecting the line limit."""
-    all_days = collect_all_days(tasks_by_date)
+    all_days = collect_all_days(tasks_by_date, max_future_days=max_future_days)
 
     left_column = []
     right_column = []
@@ -154,8 +154,8 @@ async def view_schedule(request: Request, db: aiosqlite.Connection = Depends(get
 @router.get("/print", response_class=HTMLResponse)
 async def print_schedule(request: Request, db: aiosqlite.Connection = Depends(get_db)):
     """Print-friendly schedule view with two columns."""
-    tasks_by_date = await get_scheduled_tasks(db)
-    left_column, right_column = build_schedule_columns(tasks_by_date)
+    tasks_by_date = await get_scheduled_tasks(db, max_future_days=20)
+    left_column, right_column = build_schedule_columns(tasks_by_date, max_future_days=20)
 
     return templates.TemplateResponse("schedule/print.html", {
         "request": request,
