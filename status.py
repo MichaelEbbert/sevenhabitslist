@@ -4,10 +4,21 @@ Check status of Seven Habits List service on AWS EC2
 """
 import subprocess
 import sys
+import os
+import glob
 
 # Configuration
-# NOTE: Path may vary by computer. If not found on D:\ drive, try C:\ drive
-SSH_KEY = r"D:\claude_projects\taskschedule\taskschedule-key.pem"
+# Automatically find any .pem file in the taskschedule directory
+def find_ssh_key():
+    for drive in ['C:']:
+        key_dir = os.path.join(drive, 'claude_projects', 'taskschedule')
+        if os.path.exists(key_dir):
+            pem_files = glob.glob(os.path.join(key_dir, '*.pem'))
+            if pem_files:
+                return pem_files[0]
+    return None
+
+SSH_KEY = find_ssh_key()
 SERVER_USER = "ec2-user"
 SERVER_IP = "100.50.222.238"
 SERVICE_NAME = "sevenhabitslist"

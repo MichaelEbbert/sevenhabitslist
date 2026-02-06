@@ -159,15 +159,15 @@ python restart.py       # Restart the service
 - **Subdomain:** https://sevenhabitslist.mebbert.com
 - **Internal Port:** 3002
 - **Server IP:** 100.50.222.238
-- **SSH Key:** `D:\claude_projects\taskschedule\taskschedule-key.pem`
-  - **Note:** Path may vary by computer. If not found on D:\ drive, try C:\ drive
+- **SSH Key:** Any `*.pem` file in `C:\claude_projects\taskschedule\` (or `C:\claude_projects\taskschedule\`)
+  - **Note:** Deployment scripts automatically find and use any .pem file in this directory
 - **Deploy Path:** `/home/ec2-user/sevenhabitslist/`
 
 ### Quick Commands
 
 **SSH into server:**
 ```bash
-ssh -i "D:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
+ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
 ```
 
 **Deploy/Update (from local machine):**
@@ -197,7 +197,7 @@ sudo journalctl -u sevenhabitslist -f
 SSH into the server and set up the application directory:
 
 ```bash
-ssh -i "D:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
+ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
 
 # Create directory
 mkdir -p /home/ec2-user/sevenhabitslist
@@ -221,7 +221,7 @@ python deploy.py
 Or manually with rsync:
 
 ```bash
-rsync -avz -e "ssh -i D:\claude_projects\taskschedule\taskschedule-key.pem" \
+rsync -avz -e "ssh -i C:\claude_projects\taskschedule\taskschedule-key.pem" \
   --exclude='venv/' \
   --exclude='data/' \
   --exclude='__pycache__/' \
@@ -232,7 +232,7 @@ rsync -avz -e "ssh -i D:\claude_projects\taskschedule\taskschedule-key.pem" \
 #### Step 3: Install Dependencies on Server
 ```bash
 # SSH into server
-ssh -i "D:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
+ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
 
 cd /home/ec2-user/sevenhabitslist
 source venv/bin/activate
@@ -295,12 +295,12 @@ python deploy.py
 **Option 2: Manual update**
 ```bash
 # 1. Copy files to server
-rsync -avz -e "ssh -i D:\claude_projects\taskschedule\taskschedule-key.pem" \
+rsync -avz -e "ssh -i C:\claude_projects\taskschedule\taskschedule-key.pem" \
   --exclude='venv/' --exclude='data/' --exclude='__pycache__/' --exclude='.git/' \
   ./ ec2-user@100.50.222.238:/home/ec2-user/sevenhabitslist/
 
 # 2. SSH into server
-ssh -i "D:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
+ssh -i "C:\claude_projects\taskschedule\taskschedule-key.pem" ec2-user@100.50.222.238
 
 # 3. Update dependencies if needed
 cd /home/ec2-user/sevenhabitslist
